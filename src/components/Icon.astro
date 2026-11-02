@@ -1,0 +1,82 @@
+---
+// Renders a brand logo as inline SVG at build time, from a slug (e.g.
+// "laravel"). Looked up in simple-icons first (single-path, recolorable via
+// `tone`). A few brands simple-icons has dropped over trademark/brand
+// guideline enforcement — AWS, LinkedIn — fall back to the Iconify "logos"
+// collection instead, which ships the real multi-color official marks; those
+// render in their own baked-in colors regardless of `tone`. If a slug isn't
+// in either set, nothing renders — no fake placeholder badge.
+import * as icons from 'simple-icons';
+import logosData from '@iconify-json/logos/icons.json';
+
+const logoAliases: Record<string, string> = {
+  aws: 'aws',
+  linkedin: 'linkedin-icon',
+};
+
+interface Props {
+  slug: string;
+  label?: string;
+  size?: number;
+  /** "brand" uses the logo's own color, "mono" uses currentColor. Ignored for logos-collection fallbacks, which carry their own fixed colors. */
+  tone?: 'brand' | 'mono';
+  class?: string;
+  /** Hide from screen readers when a visible label sits next to the icon. */
+  decorative?: boolean;
+}
+
+const { slug, label, size = 20, tone = 'brand', class: className = '', decorative = false } = Astro.props;
+
+const key = 'si' + slug.charAt(0).toUpperCase() + slug.slice(1);
+const icon = (icons as Record<string, { title: string; path: string; hex: string } | undefined>)[key];
+
+const logoKey = !icon ? logoAliases[slug] : undefined;
+const logo = logoKey ? (logosData.icons as Record<string, { body: string } | undefined>)[logoKey] : undefined;
+
+// Logos that are near-white vanish on the light paper background; logos
+// that are near-black vanish on the dark panel background in dark mode.
+// Both fall back to the theme-adaptive ink color instead of a fixed hex.
+function readable(hex: string) {
+  const n = parseInt(hex, 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => {
+    const s = c / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return lum > 0.55 || lum < 0.06 ? 'var(--ink)' : `#${hex}`;
+}
+
+const color = icon ? readable(icon.hex) : 'var(--ink)';
+const name = label ?? icon?.title ?? slug;
+---
+
+{icon ? (
+  <svg
+    class:list={['icon', `icon--${tone}`, className]}
+    style={`--brand:${color}`}
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    {...(decorative ? { 'aria-hidden': 'true' } : { role: 'img', 'aria-label': name })}
+    fill="currentColor"
+    focusable="false"
+  >
+    {!decorative && <title>{name}</title>}
+    <path d={icon.path} />
+  </svg>
+) : logo ? (
+  // These ship fixed, baked-in colors (often near-black) that assume a
+  // light surface, so they get a fixed light chip behind them rather than
+  // sitting flush on a page that may be in dark mode.
+  <svg
+    class:list={['icon', 'icon--logo', className]}
+    width={size}
+    height={size}
+    viewBox={`0 0 ${logosData.width} ${logosData.height}`}
+    {...(decorative ? { 'aria-hidden': 'true' } : { role: 'img', 'aria-label': name })}
+    focusable="false"
+    set:html={logo.body}
+  >
+    {!decorative && <title>{name}</title>}
+  </svg>
+) : null}

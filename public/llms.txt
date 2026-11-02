@@ -1,0 +1,26 @@
+# James Carlo Luchavez
+
+> Backend engineer with 7+ years building Laravel/PHP backends for teams in the US, Canada, Australia and the Philippines. Based in Cagayan de Oro, Philippines.
+
+## Flagship project: LaraKube Desktop
+
+LaraKube Desktop (and LaraKube CLI) is an open-source tool, written in PHP (NativePHP for the desktop app, Laravel Zero for the CLI), that provisions servers with OpenTofu and runs Laravel and other apps on k3s (Kubernetes). It is the open-source equivalent of ServerSideUp's Spin Pro, but targets Kubernetes instead of Docker Swarm, so a project can start on a single VPS and move to managed Kubernetes later without a rewrite.
+
+- Source: https://github.com/luchavez-technologies/larakube-cli and https://github.com/luchavez-technologies/larakube-desktop
+- Docs: https://docs.larakube.app
+
+## Skills
+
+Backend: Laravel, PHP, FilamentPHP, GraphQL, REST APIs, MCP, OpenAI API.
+Data: MySQL, PostgreSQL, Redis, Meilisearch, SeaweedFS.
+Infrastructure: Docker, Kubernetes, k3s, Traefik, OpenTofu, OpenBao.
+Cloud and CI: AWS Lambda, AWS S3, DigitalOcean, Hetzner, Cloudflare, GitHub Actions.
+
+## Contact
+
+- Email: james@luchtech.dev
+- GitHub: https://github.com/luchtech
+- LinkedIn: https://www.linkedin.com/in/luchaveztech/
+- Upwork: https://www.upwork.com/freelancers/~0107c3f12c828682e7
+
+Open to remote backend and platform engineering roles.

@@ -1,0 +1,537 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import Chip from '../components/Chip.astro';
+import Lucide from '../components/Lucide.astro';
+import { fetchRepoStats, relativeTime } from '../lib/github';
+import QRCode from 'qrcode';
+import {
+  person,
+  nav,
+  hero,
+  toolsLabel,
+  tools,
+  larakube,
+  skills,
+  experience,
+  contact,
+  footer,
+} from '../data/site';
+
+// Optional asset: render the LaraKube logo only if James has dropped the
+// file in public/.
+const publicDir = path.join(process.cwd(), 'public');
+const hasFile = (p: string) => fs.existsSync(path.join(publicDir, p.replace(/^\//, '')));
+const hasLogo = hasFile(larakube.logo);
+const shots = larakube.screenshots.map((s) => ({
+  ...s,
+  src: `/desktop/${s.file}`,
+  exists: hasFile(`desktop/${s.file}`),
+}));
+
+const { diagram } = larakube;
+// Link the first "Spin Pro" mention in the opening why-paragraph.
+const [whyIntro, ...whyRest] = larakube.why;
+const whyIntroParts = whyIntro.split('Spin Pro');
+
+// Live GitHub stats, fetched once at build time. A failed/rate-limited fetch
+// must never break the build — it just omits that repo's row.
+const repoRefs = larakube.links
+  .filter((l) => l.href.includes('github.com/'))
+  .map((l) => {
+    const [, owner, repo] = new URL(l.href).pathname.split('/');
+    return { owner, repo };
+  });
+const repoStatsResults = await Promise.allSettled(
+  repoRefs.map((r) => fetchRepoStats(r.owner, r.repo))
+);
+const repoStats = repoStatsResults
+  .map((r) => (r.status === 'fulfilled' ? r.value : null))
+  .filter((r): r is NonNullable<typeof r> => r !== null);
+
+// Built at compile time, embedded inline — no runtime request, no third-party
+// QR service seeing the number.
+const whatsappQr = await QRCode.toString(person.whatsappUrl, {
+  type: 'svg',
+  margin: 0,
+  color: { dark: '#181511', light: '#ffffff' },
+});
+
+const description =
+  'James Carlo Luchavez, backend engineer: 7+ years of Laravel and PHP, and the builder of LaraKube Desktop, an open-source tool that runs Laravel apps on k3s.';
+const canonicalUrl = new URL('/', Astro.site);
+const ogImageUrl = new URL('/og-image.png', Astro.site);
+const knowsAbout = skills.groups.flatMap((g) => g.items.map((i) => i.name));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${canonicalUrl}#person`,
+      name: person.name,
+      jobTitle: 'Backend Engineer',
+      email: `mailto:${person.email}`,
+      url: canonicalUrl.toString(),
+      image: ogImageUrl.toString(),
+      address: { '@type': 'PostalAddress', addressLocality: person.location },
+      sameAs: [person.githubUrl, person.linkedinUrl, person.upworkUrl],
+      knowsAbout,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${canonicalUrl}#website`,
+      url: canonicalUrl.toString(),
+      name: person.name,
+      description,
+      author: { '@id': `${canonicalUrl}#person` },
+      inLanguage: 'en',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'LaraKube Desktop',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Windows, macOS, Linux',
+      description: larakube.problem,
+      author: { '@id': `${canonicalUrl}#person` },
+      url: larakube.links.find((l) => l.href.includes('larakube-desktop'))?.href,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+  ],
+};
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/jpeg" href="/profile.jpeg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="generator" content={Astro.generator} />
+    <title>James Carlo Luchavez · Backend engineer, Laravel and Kubernetes</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={person.name} />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="James Carlo Luchavez · Backend engineer" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={person.name} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1200" />
+    <meta property="og:image:alt" content="LaraKube logo" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="James Carlo Luchavez · Backend engineer" />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <meta name="theme-color" content="#f3f4f1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f14" media="(prefers-color-scheme: dark)" />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>
+      // Applied before first paint so there's no flash of the wrong theme.
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="#top">
+          <img class="brand-avatar" src="/profile.jpeg" alt="" width="32" height="32" />
+          {person.name}
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <ul>
+            {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+          </ul>
+        </nav>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark theme">
+          <Lucide name="sun" size={18} />
+          <Lucide name="moon" size={18} />
+        </button>
+        <a class="btn" href={person.resumeUrl} download>
+          <Lucide name="download" size={16} />
+          Download resume
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero -->
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-main">
+          <div class="wrap">
+            <div>
+              <p class="eyebrow">{hero.eyebrow}</p>
+              <h1 id="hero-title">{hero.headline} <em>{hero.headlineAccent}</em></h1>
+              <p class="lead">{hero.lede}</p>
+              <div class="hero-actions">
+                <a class="btn btn--dark" href={hero.primary.href}>
+                  {hero.primary.label}
+                  <Lucide name="arrow-right" size={16} />
+                </a>
+                <a class="btn" href={hero.secondary.href} target="_blank" rel="noopener">
+                  <Icon slug="github" size={16} decorative />
+                  {hero.secondary.label}
+                </a>
+              </div>
+              <p class="hero-status"><span class="dot" aria-hidden="true"></span>{hero.status}</p>
+            </div>
+
+            <div class="terminal" role="img" aria-label="Terminal: larakube cloud:create creates a hardened k3s server, then larakube cloud:deploy production rolls out the app, which goes live at https://shop.example.com.">
+              <div class="terminal-bar" aria-hidden="true">
+                <i></i><i></i><i></i>
+                <span>~/projects/shop</span>
+              </div>
+              <div class="terminal-output" aria-hidden="true">
+                {hero.terminal.map((line) => (
+                  <p class:list={['t-row', { 't-gap': line.gap, 't-muted': line.out }]}>
+                    {line.cmd && <><span class="t-prompt">$</span> {line.cmd}</>}
+                    {line.out && (
+                      <>
+                        <span>›</span>{' '}
+                        {line.out.split(/\*\*(.+?)\*\*/).map((part, i) => (i % 2 ? <strong>{part}</strong> : part))}
+                        {line.ok && <> <span class="t-ok">✓</span></>}
+                      </>
+                    )}
+                    {line.success && <span class="t-ok">✓ {line.success}</span>}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tools strip -->
+        <div class="tools" aria-label="Daily tools">
+          <div class="wrap">
+            <p class="label">{toolsLabel}</p>
+            <ul>
+              {tools.map((t) => (
+                <li>
+                  <Icon slug={t.icon!} label={t.name} size={20} decorative />
+                  <span>{t.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- LaraKube -->
+      <section class="section" id="larakube" aria-labelledby="lk-title">
+        <div class="wrap">
+          <div class="lk-head">
+            <div>
+              {hasLogo && <img class="lk-logo" src={larakube.logo} alt="LaraKube Desktop" />}
+              <p class="label">Featured project</p>
+              <h2 class="h2" id="lk-title">{larakube.title}</h2>
+            </div>
+            <div class="lk-why">
+              <p class="lead lk-problem">{larakube.problem}</p>
+              <h3>Why I built it</h3>
+              <p>
+                {whyIntroParts[0]}<a href={larakube.spinProUrl} target="_blank" rel="noopener">Spin Pro</a>{whyIntroParts.slice(1).join('Spin Pro')}
+              </p>
+              {whyRest.map((p) => <p>{p}</p>)}
+            </div>
+          </div>
+
+          <!-- Screenshots — leads with the real product, not stats/text first -->
+          <div class="lk-showcase">
+            <div class="embla" role="region" aria-label="LaraKube Desktop screenshots">
+              <div class="embla__viewport">
+                <div class="embla__container">
+                  {shots.map((s) => (
+                    <figure class="embla__slide">
+                      {s.exists ? (
+                        <img src={s.src} alt={`LaraKube Desktop: ${s.caption}`} loading="lazy" decoding="async" />
+                      ) : (
+                        <div class="shot-placeholder" role="img" aria-label={`Screenshot coming soon: ${s.caption}`}>
+                          public/desktop/{s.file}
+                        </div>
+                      )}
+                      <figcaption>{s.caption}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+              <button type="button" class="embla__btn embla__btn--prev" aria-label="Previous screenshot">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+              </button>
+              <button type="button" class="embla__btn embla__btn--next" aria-label="Next screenshot">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+              </button>
+              <div class="embla__dots">
+                {shots.map((s, i) => (
+                  <button type="button" class="embla__dot" aria-label={`Go to screenshot ${i + 1}: ${s.caption}`}></button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {repoStats.length > 0 && (
+            <ul class="lk-repo-stats">
+              {repoStats.map((r) => (
+                <li>
+                  <Icon slug="github" size={16} decorative />
+                  <strong>{r.repo}</strong>
+                  {r.pushedAt && <span>updated {relativeTime(r.pushedAt)}</span>}
+                  {r.latestRelease && <span>{r.latestRelease}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div class="lk-stack">
+            <p class="label">Built with</p>
+            <p class="lk-stack-line"><Icon slug={larakube.stack.shared.icon!} label={larakube.stack.shared.name} size={18} />{larakube.stack.shared.name} — CLI on <a href={larakube.stack.cli.href} target="_blank" rel="noopener">{larakube.stack.cli.name}</a>{', '}Desktop on <a href={larakube.stack.desktop.href} target="_blank" rel="noopener">{larakube.stack.desktop.name}</a></p>
+          </div>
+
+          <ul class="facts">
+            {larakube.facts.map((f) => (
+              <li class="fact">
+                <p class="fact-big">{f.big}</p>
+                <p>{f.text}</p>
+                {f.icons && (
+                  <ul class="fact-icons" aria-label={f.text}>
+                    {f.icons.map((t) => (
+                      <li data-tooltip={t.name} aria-label={t.name}>
+                        {t.icon ? (
+                          <Icon slug={t.icon} size={20} decorative />
+                        ) : t.lucide ? (
+                          <Lucide name={t.lucide as any} size={18} />
+                        ) : (
+                          <span class="fact-icons__text">{t.name}</span>
+                        )}
+                      </li>
+                    ))}
+                    {f.moreCount && (
+                      <li class="fact-icons__more" aria-label={`and ${f.moreCount} more`}>+{f.moreCount}</li>
+                    )}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          <!-- How a deploy flows -->
+          <div class="block">
+            <h3 class="h3">How a deploy flows</h3>
+            <figure class="diagram" style="margin:0">
+              <div class="diagram-row">
+                <div class="diagram-inputs">
+                  {diagram.inputs.map((n) => (
+                    <div class:list={['node', { 'node--dashed': n.dashed }]}>
+                      <strong>{n.title}</strong>
+                      <small>{n.sub}</small>
+                    </div>
+                  ))}
+                </div>
+                <div class="arrow" aria-hidden="true">
+                  <svg viewBox="0 0 32 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h29M24 1l6 6-6 6" /></svg>
+                </div>
+                <div class="node node--accent">
+                  <span class="node-title"><Icon slug={diagram.provision.icon} size={18} decorative /><strong>{diagram.provision.title}</strong></span>
+                  <small>{diagram.provision.sub}</small>
+                </div>
+                <div class="arrow" aria-hidden="true">
+                  <svg viewBox="0 0 32 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h29M24 1l6 6-6 6" /></svg>
+                </div>
+                <div class="cluster">
+                  <p class="cluster-label"><Icon slug="k3s" size={14} decorative /> {diagram.cluster.label}</p>
+                  <div class="node node--wide">
+                    <span class="node-title"><Icon slug={diagram.cluster.ingress.icon} size={18} decorative /><strong>{diagram.cluster.ingress.title}</strong></span>
+                  </div>
+                  <div class="cluster-grid">
+                    {diagram.cluster.apps.map((a) => (
+                      <div class="node">
+                        <span class="node-title">
+                          {a.icon && <Icon slug={a.icon} size={18} decorative />}
+                          <strong>{a.title}</strong>
+                        </span>
+                        <small>{a.sub}<br />{a.sub2}</small>
+                      </div>
+                    ))}
+                  </div>
+                  <div class="node node--wide">
+                    <strong>{diagram.cluster.commons.title}</strong>
+                    <small>{diagram.cluster.commons.sub}</small>
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-managed">
+                <span class="arrow arrow--down" aria-hidden="true">
+                  <svg viewBox="0 0 14 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v29M1 24l6 6 6-6" /></svg>
+                </span>
+                <div class="node node--dashed node--wide">
+                  <strong>{diagram.managed.title}</strong>
+                  <small>{diagram.managed.sub}</small>
+                </div>
+              </div>
+            </figure>
+          </div>
+
+          <!-- Decisions -->
+          <div class="block">
+            <h3 class="h3">{larakube.decisionsTitle}</h3>
+            <ul class="decisions">
+              {larakube.decisions.map((d, i) => (
+                <li class="decision">
+                  <span class="decision-index">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h4>{d.title}</h4>
+                    <p>{d.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p class="lk-roadmap">
+            <Lucide name="arrow-right" size={16} />
+            <strong>{larakube.roadmap.title}</strong> — {larakube.roadmap.text}
+          </p>
+
+          <div class="pill-links">
+            {larakube.links.map((l) => (
+              <a class="pill-link" href={l.href} target="_blank" rel="noopener">
+                {l.label.includes('GitHub') ? <Icon slug="github" size={15} decorative /> : <Lucide name="book-open" size={15} />}
+                {l.label} <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="section skills" id="skills" aria-labelledby="skills-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 class="h2" id="skills-title">{skills.title}</h2>
+            <p class="lead">{skills.subtitle}</p>
+          </div>
+          <div class="skill-groups">
+            {skills.groups.map((g) => (
+              <div>
+                <h3>{g.name}</h3>
+                <ul class="chips">
+                  {g.items.map((t) => <Chip item={t} />)}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section class="section experience" id="experience" aria-labelledby="exp-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 class="h2" id="exp-title">{experience.title}</h2>
+            <p class="lead">{experience.subtitle}</p>
+          </div>
+          <ol class="timeline">
+            {experience.roles.map((r) => (
+              <li class="role">
+                <p class="role-dates">{r.date}</p>
+                <div>
+                  <h3>{r.title}</h3>
+                  <p class="role-desc">{r.description}</p>
+                  {r.tags.length > 0 && (
+                    <ul class="chips">
+                      {r.tags.map((t) => <Chip item={t} />)}
+                    </ul>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <!-- Contact -->
+    <section id="contact" class="section contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <p class="label">Contact</p>
+        <h2 id="contact-title">{contact.title}</h2>
+        <p class="lead">{contact.text}</p>
+        <div class="contact-actions">
+          <a class="btn btn--primary" href={`mailto:${person.email}`}>
+            <Lucide name="mail" size={16} />
+            {person.email}
+          </a>
+          <a class="btn btn--light" href={person.linkedinUrl} target="_blank" rel="noopener">
+            <Icon slug="linkedin" size={16} decorative />
+            LinkedIn
+          </a>
+          <a class="btn btn--light" href={person.upworkUrl} target="_blank" rel="noopener">
+            <Icon slug="upwork" size={16} decorative />
+            Upwork
+          </a>
+          <a class="btn btn--light" href={person.githubUrl} target="_blank" rel="noopener">
+            <Icon slug="github" size={16} tone="mono" decorative />
+            GitHub
+          </a>
+          <a class="btn btn--light" href={person.resumeUrl} download>
+            <Lucide name="download" size={16} />
+            Download resume
+          </a>
+        </div>
+
+        <p class="contact-also">Or message me directly:</p>
+        <div class="contact-actions contact-actions--chat">
+          <div class="btn-split">
+            <a class="btn btn--light btn-split__main" href={person.whatsappUrl} target="_blank" rel="noopener">
+              <Icon slug="whatsapp" size={16} decorative />
+              WhatsApp
+            </a>
+            <button type="button" class="btn-split__toggle" aria-label="Show WhatsApp QR code to scan on your phone" aria-expanded="false">
+              <Lucide name="qr-code" size={16} />
+            </button>
+            <div class="qr-panel" set:html={whatsappQr} />
+          </div>
+          <a class="btn btn--light" href={person.viberUrl}>
+            <Icon slug="viber" size={16} decorative />
+            Viber
+          </a>
+          <a class="btn btn--light" href={person.messengerUrl} target="_blank" rel="noopener">
+            <Icon slug="messenger" size={16} decorative />
+            Messenger
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <span>{footer.copyright}</span>
+        <span class="built-with">
+          Built with <Icon slug="astro" size={16} decorative /> Astro, hosted on <Icon slug="k3s" size={16} tone="mono" decorative /> k3s ·{' '}
+          <a class="footer-link" href={footer.sourceUrl} target="_blank" rel="noopener">View source</a>
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      import { initTerminalTyping, initQrToggle, initCarousel, initThemeToggle } from '../scripts/interactions';
+      initTerminalTyping();
+      initQrToggle();
+      initCarousel();
+      initThemeToggle();
+    </script>
+  </body>
+</html>

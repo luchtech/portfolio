@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro';
+import type { Tech } from '../data/site';
+
+interface Props {
+  item: Tech;
+  tone?: 'brand' | 'mono';
+}
+
+const { item, tone = 'brand' } = Astro.props;
+---
+
+{item.href ? (
+  <li class="chip chip--link">
+    <a href={item.href} target="_blank" rel="noopener">
+      {item.icon && <Icon slug={item.icon} label={item.name} size={16} tone={tone} decorative />}
+      <span>{item.name}</span>
+    </a>
+  </li>
+) : (
+  <li class="chip">
+    {item.icon && <Icon slug={item.icon} label={item.name} size={16} tone={tone} decorative />}
+    <span>{item.name}</span>
+  </li>
+)}
