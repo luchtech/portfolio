@@ -39,3 +39,4 @@ references
 
 # internal session scratch notes, not for the public repo
 claude-code-handoff.md
+.env.*

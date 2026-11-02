@@ -49,6 +49,44 @@
             "securityAudit": null,
             "ciVpn": false,
             "proxied": false
+        },
+        "production": {
+            "ingress": "traefik",
+            "strategy": null,
+            "managed": [],
+            "plex": [],
+            "hosts": {
+                "web": "james.luchtech.dev"
+            },
+            "additionalWebHosts": [],
+            "addFeatures": [],
+            "excludeFeatures": [],
+            "namespace": null,
+            "serviceAccount": null,
+            "serviceAccountAnnotations": [],
+            "imagePullSecret": null,
+            "omitImagePullSecret": false,
+            "ingressAnnotations": [],
+            "storageClass": null,
+            "certManagerIssuer": null,
+            "registry": null,
+            "sharedStorage": false,
+            "resources": [],
+            "replicas": [],
+            "autoscale": [],
+            "offline": false,
+            "tunnel": null,
+            "securityAudit": {
+                "skip": false,
+                "strict": false,
+                "withTests": true,
+                "gitleaks": true,
+                "semgrep": true,
+                "dependencyAudit": true,
+                "trivy": true
+            },
+            "ciVpn": false,
+            "proxied": false
         }
     },
     "githubActions": true,
