@@ -93,6 +93,7 @@
     "isSystem": false,
     "withCompanions": true,
     "provisionTestDb": false,
+    "hsts": true,
     "lockedFiles": [],
     "watchPaths": [
         "src",
