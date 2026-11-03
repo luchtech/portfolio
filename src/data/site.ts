@@ -332,6 +332,11 @@ export const experience = {
 export const contact = {
   title: 'Hiring a backend engineer who can also run the cluster?',
   text: 'Based in Cagayan de Oro, Philippines, and used to working with teams in US, Canadian and Australian time zones.',
+  video: {
+    // Draft label — edit to match what the video actually shows.
+    label: 'Want a bit more? Watch a short video',
+    loomId: 'd8fc9d6b8e3448e6b9b6e35b81aca793',
+  },
 };
 
 export const footer = {

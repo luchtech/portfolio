@@ -1301,6 +1301,53 @@ img {
   outline-color: #fff;
 }
 
+.contact-video {
+  margin-top: 32px;
+  border-top: 1px solid var(--on-ink-rule);
+  padding-top: 20px;
+}
+.contact-video summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--on-ink-muted);
+  list-style: none;
+  transition: color 0.15s ease;
+}
+.contact-video summary::-webkit-details-marker {
+  display: none;
+}
+.contact-video summary:hover,
+.contact-video[open] summary {
+  color: var(--on-ink);
+}
+.contact-video summary :last-child {
+  transition: transform 0.2s ease;
+}
+.contact-video[open] summary :last-child {
+  transform: rotate(180deg);
+}
+.contact-video__embed {
+  position: relative;
+  margin-top: 16px;
+  max-width: 360px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--on-ink-rule);
+  background: rgba(255, 255, 255, 0.06);
+}
+.contact-video__embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--navy);

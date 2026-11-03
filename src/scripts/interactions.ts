@@ -75,6 +75,28 @@ export function initQrToggle(): void {
   });
 }
 
+export function initVideoDisclosure(): void {
+  const details = document.querySelector<HTMLDetailsElement>('.contact-video');
+  const embed = details?.querySelector<HTMLElement>('.contact-video__embed');
+  if (!details || !embed) return;
+
+  details.addEventListener(
+    'toggle',
+    () => {
+      if (!details.open) return;
+      const loomId = embed.dataset.loomId;
+      if (!loomId) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.loom.com/embed/${loomId}`;
+      iframe.title = 'Video';
+      iframe.allow = 'fullscreen';
+      iframe.allowFullscreen = true;
+      embed.appendChild(iframe);
+    },
+    { once: true },
+  );
+}
+
 export function initTerminalTyping(): void {
   if (prefersReducedMotion()) return;
 
