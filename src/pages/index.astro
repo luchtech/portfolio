@@ -249,8 +249,26 @@ const jsonLd = {
             </div>
           </div>
 
-          <!-- Screenshots — leads with the real product, not stats/text first -->
+          <!-- Demo videos — leads with motion, ahead of the static screenshots -->
+          <div class="lk-videos">
+            {larakube.videos.map((v, i) => (
+              <figure class="lk-video" data-youtube-id={v.youtubeId}>
+                <button type="button" class="lk-video__play" aria-label={`Play video: ${v.title}`}>
+                  <img
+                    src={`https://i.ytimg.com/vi/${v.youtubeId}/maxresdefault.jpg`}
+                    alt=""
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                  />
+                  <span class="lk-video__play-icon"><Lucide name="circle-play" size={56} /></span>
+                </button>
+                <figcaption>{v.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <!-- Screenshots -->
           <div class="lk-showcase">
+            <p class="label lk-showcase-label">More screenshots</p>
             <div class="embla" role="region" aria-label="LaraKube Desktop screenshots">
               <div class="embla__viewport">
                 <div class="embla__container">
@@ -536,12 +554,13 @@ const jsonLd = {
     </footer>
 
     <script>
-      import { initTerminalTyping, initQrToggle, initCarousel, initThemeToggle, initVideoDisclosure } from '../scripts/interactions';
+      import { initTerminalTyping, initQrToggle, initCarousel, initThemeToggle, initVideoDisclosure, initLkVideos } from '../scripts/interactions';
       initTerminalTyping();
       initQrToggle();
       initCarousel();
       initThemeToggle();
       initVideoDisclosure();
+      initLkVideos();
     </script>
   </body>
 </html>

@@ -218,6 +218,11 @@ export const larakube = {
     { file: '03-create-project.png', caption: 'Starting a new project' },
     { file: '04-cluster-apps.png', caption: 'Cluster apps' },
   ],
+  // Demo clips — bite-size, one per feature. Push new entries here as they're
+  // recorded (n8n, WordPress, PocketBase installs, etc).
+  videos: [
+    { title: 'LaraKube Desktop: Deploy a Kubernetes Server in 3 Minutes', youtubeId: 'VVXIGK9IUzE' },
+  ],
 };
 
 export const skills = {

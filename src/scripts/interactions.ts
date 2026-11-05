@@ -97,6 +97,30 @@ export function initVideoDisclosure(): void {
   );
 }
 
+// Demo video grid on the LaraKube section: each card shows a YouTube
+// thumbnail (no iframe cost) and swaps in the real embed on click.
+export function initLkVideos(): void {
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.lk-video__play');
+
+  buttons.forEach((button) => {
+    button.addEventListener(
+      'click',
+      () => {
+        const card = button.closest<HTMLElement>('.lk-video');
+        const youtubeId = card?.dataset.youtubeId;
+        if (!card || !youtubeId) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+        iframe.title = card.querySelector('figcaption')?.textContent ?? 'Video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        button.replaceWith(iframe);
+      },
+      { once: true },
+    );
+  });
+}
+
 export function initTerminalTyping(): void {
   if (prefersReducedMotion()) return;
 
