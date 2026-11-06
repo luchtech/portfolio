@@ -222,6 +222,7 @@ export const larakube = {
   // recorded (n8n, WordPress, PocketBase installs, etc).
   videos: [
     { title: 'LaraKube Desktop: Deploy a Kubernetes Server in 3 Minutes', youtubeId: 'VVXIGK9IUzE' },
+    { title: 'LaraKube Desktop: Install n8n with One Click', youtubeId: 'x3Xjpdr4yZs' },
   ],
 };
 
