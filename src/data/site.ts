@@ -218,11 +218,15 @@ export const larakube = {
     { file: '03-create-project.png', caption: 'Starting a new project' },
     { file: '04-cluster-apps.png', caption: 'Cluster apps' },
   ],
-  // Demo clips — bite-size, one per feature. Push new entries here as they're
-  // recorded (n8n, WordPress, PocketBase installs, etc).
+  // Demo clips — bite-size, one per feature. Fetched live from this playlist
+  // at build time (see src/lib/youtube.ts); `videos` below is only the
+  // fallback used if that fetch fails.
+  videosPlaylistId: 'PLA7VUwI0KNjI',
   videos: [
     { title: 'LaraKube Desktop: Deploy a Kubernetes Server in 3 Minutes', youtubeId: 'VVXIGK9IUzE' },
     { title: 'LaraKube Desktop: Install n8n with One Click', youtubeId: 'x3Xjpdr4yZs' },
+    { title: 'LaraKube Desktop: Install PocketBase (Self-Hosted Backend) in One Click', youtubeId: 'PwZQAWHCq-E' },
+    { title: 'LaraKube Desktop: Install WordPress (Zero-Config CMS) in One Click', youtubeId: '78BorLalCyU' },
   ],
 };
 

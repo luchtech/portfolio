@@ -700,9 +700,30 @@ img {
 
 .lk-videos {
   margin-top: 48px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+}
+.embla--videos .embla__container {
+  margin-left: -12px;
+}
+.embla--videos .embla__slide {
+  flex: 0 0 100%;
+  padding-left: 12px;
+}
+@media (min-width: 900px) {
+  .embla--videos .embla__slide {
+    flex: 0 0 33.3333%;
+  }
+}
+.lk-videos-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  font-size: 14.5px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.lk-videos-more:hover {
+  color: var(--ink);
 }
 .lk-video {
   margin: 0;
@@ -755,6 +776,79 @@ img {
   margin-top: 10px;
   font-size: 14.5px;
   color: var(--muted);
+}
+
+/* Video spotlight lightbox: a dimmed backdrop + a centered embed that scales
+   up from slightly-shrunk to full size on open, instead of the embed just
+   appearing. */
+.lk-video-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.lk-video-lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lk-video-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 7, 6, 0.8);
+  backdrop-filter: blur(4px);
+}
+.lk-video-lightbox__frame {
+  position: relative;
+  width: min(92vw, 1040px);
+  transform: scale(0.94);
+  transition: transform 0.25s ease;
+}
+.lk-video-lightbox.is-open .lk-video-lightbox__frame {
+  transform: scale(1);
+}
+.lk-video-lightbox__embed {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+  background: #000;
+}
+.lk-video-lightbox__embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.lk-video-lightbox__close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.lk-video-lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lk-video-lightbox,
+  .lk-video-lightbox__frame {
+    transition: none;
+  }
+}
+body.lk-video-lightbox-open {
+  overflow: hidden;
 }
 
 .lk-showcase {
@@ -1011,6 +1105,12 @@ img {
 
 /* Screenshots carousel (Embla Carousel) */
 .embla {
+  position: static;
+}
+/* Nav buttons are positioned relative to this wrapper, not the whole .embla
+   (which also includes captions/dots below) — otherwise their 50% midpoint
+   sits below the actual vertical center of the slide. */
+.embla__frame {
   position: relative;
 }
 .embla__viewport {
@@ -1024,7 +1124,7 @@ img {
   min-width: 0;
   margin: 0;
 }
-.embla__slide img {
+.lk-showcase .embla__slide img {
   width: 100%;
   height: min(68vh, 640px);
   object-fit: contain;
@@ -1058,7 +1158,13 @@ img {
 }
 .embla__btn {
   position: absolute;
-  top: calc(50% - 20px);
+  /* Centered on the media (image/thumbnail) itself, not the slide's full
+     height — a slide's figcaption sits below the media inside the same
+     scroll track, so a plain 50%-of-frame midpoint would sit too low.
+     --embla-media-h is set from JS to the media element's real rendered
+     height; the 100% fallback approximates the old (slightly-off) behavior
+     before that JS runs. */
+  top: calc(var(--embla-media-h, 100%) / 2 - 20px);
   display: grid;
   place-items: center;
   width: 40px;

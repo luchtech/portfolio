@@ -20,29 +20,77 @@ export function initThemeToggle(): void {
   });
 }
 
+// Wires up every `.embla` carousel on the page independently (screenshots,
+// videos, …), so each gets its own Embla instance, buttons, and dots scoped
+// to that root rather than the first match on the page.
 export function initCarousel(): void {
-  const viewport = document.querySelector<HTMLElement>('.embla__viewport');
-  if (!viewport) return;
+  const roots = document.querySelectorAll<HTMLElement>('.embla');
 
-  const plugins = prefersReducedMotion()
-    ? []
-    : [Autoplay({ delay: 4500, stopOnInteraction: true, stopOnMouseEnter: true })];
-  const embla = EmblaCarousel(viewport, { loop: true }, plugins);
+  roots.forEach((root) => {
+    const viewport = root.querySelector<HTMLElement>('.embla__viewport');
+    const dotsContainer = root.querySelector<HTMLElement>('.embla__dots');
+    if (!viewport) return;
 
-  const prevBtn = document.querySelector<HTMLButtonElement>('.embla__btn--prev');
-  const nextBtn = document.querySelector<HTMLButtonElement>('.embla__btn--next');
-  prevBtn?.addEventListener('click', () => embla.scrollPrev());
-  nextBtn?.addEventListener('click', () => embla.scrollNext());
+    const plugins =
+      prefersReducedMotion() || root.dataset.autoplay === 'false'
+        ? []
+        : [Autoplay({ delay: 4500, stopOnInteraction: true, stopOnMouseEnter: true })];
 
-  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.embla__dot'));
-  dots.forEach((dot, i) => dot.addEventListener('click', () => embla.scrollTo(i)));
+    // slidesToScroll defaults to 1 (one card per swipe); a carousel that
+    // shows several cards per view at wider widths (e.g. videos, 3-up on
+    // desktop) overrides it per breakpoint so one swipe advances a full page.
+    const embla = EmblaCarousel(
+      viewport,
+      { loop: true, slidesToScroll: 1, breakpoints: JSON.parse(root.dataset.emblaBreakpoints ?? '{}') },
+      plugins,
+    );
 
-  const updateDots = () => {
-    const selected = embla.selectedScrollSnap();
-    dots.forEach((dot, i) => dot.classList.toggle('embla__dot--selected', i === selected));
-  };
-  embla.on('select', updateDots);
-  updateDots();
+    const prevBtn = root.querySelector<HTMLButtonElement>('.embla__btn--prev');
+    const nextBtn = root.querySelector<HTMLButtonElement>('.embla__btn--next');
+    prevBtn?.addEventListener('click', () => embla.scrollPrev());
+    nextBtn?.addEventListener('click', () => embla.scrollNext());
+
+    // Dots are built from Embla's own scroll-snap list (one per page), not
+    // the slide count, so a 3-up-on-desktop carousel still shows one dot
+    // per swipe rather than one per card.
+    const buildDots = () => {
+      if (!dotsContainer) return [];
+      dotsContainer.innerHTML = '';
+      return embla.scrollSnapList().map((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'embla__dot';
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.addEventListener('click', () => embla.scrollTo(i));
+        dotsContainer.appendChild(dot);
+        return dot;
+      });
+    };
+    let dots = buildDots();
+
+    const updateDots = () => {
+      const selected = embla.selectedScrollSnap();
+      dots.forEach((dot, i) => dot.classList.toggle('embla__dot--selected', i === selected));
+    };
+    embla.on('select', updateDots);
+    updateDots();
+
+    // Nav buttons center on the media (thumbnail/screenshot) itself, not the
+    // slide's full height — the figcaption below it is part of the same
+    // scroll track. Measured from the real element since it's a
+    // responsive aspect-ratio box, not a fixed size.
+    const updateMediaHeight = () => {
+      const media = root.querySelector<HTMLElement>('.embla__media');
+      if (media) root.style.setProperty('--embla-media-h', `${media.getBoundingClientRect().height}px`);
+    };
+    updateMediaHeight();
+    embla.on('resize', updateMediaHeight);
+    embla.on('reInit', () => {
+      dots = buildDots();
+      updateDots();
+      updateMediaHeight();
+    });
+  });
 }
 
 export function initQrToggle(): void {
@@ -97,27 +145,50 @@ export function initVideoDisclosure(): void {
   );
 }
 
-// Demo video grid on the LaraKube section: each card shows a YouTube
-// thumbnail (no iframe cost) and swaps in the real embed on click.
+// Demo video carousel on the LaraKube section: each card shows a YouTube
+// thumbnail (no iframe cost) and clicking it spotlights the real embed in a
+// centered, enlarged lightbox above a dimmed backdrop, rather than playing
+// cramped inline inside a one-third-width carousel card.
 export function initLkVideos(): void {
+  const lightbox = document.querySelector<HTMLElement>('.lk-video-lightbox');
+  const embed = lightbox?.querySelector<HTMLElement>('.lk-video-lightbox__embed');
+  const closeBtn = lightbox?.querySelector<HTMLButtonElement>('.lk-video-lightbox__close');
   const buttons = document.querySelectorAll<HTMLButtonElement>('.lk-video__play');
+  if (!lightbox || !embed) return;
+
+  const close = () => {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    embed.innerHTML = ''; // removing the iframe stops playback
+    document.body.classList.remove('lk-video-lightbox-open');
+  };
+
+  const open = (youtubeId: string, title: string) => {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+    iframe.title = title;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    embed.appendChild(iframe);
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lk-video-lightbox-open');
+    closeBtn?.focus();
+  };
 
   buttons.forEach((button) => {
-    button.addEventListener(
-      'click',
-      () => {
-        const card = button.closest<HTMLElement>('.lk-video');
-        const youtubeId = card?.dataset.youtubeId;
-        if (!card || !youtubeId) return;
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-        iframe.title = card.querySelector('figcaption')?.textContent ?? 'Video';
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-        iframe.allowFullscreen = true;
-        button.replaceWith(iframe);
-      },
-      { once: true },
-    );
+    button.addEventListener('click', () => {
+      const card = button.closest<HTMLElement>('.lk-video');
+      const youtubeId = card?.dataset.youtubeId;
+      if (!youtubeId) return;
+      open(youtubeId, card?.querySelector('figcaption')?.textContent ?? 'Video');
+    });
+  });
+
+  closeBtn?.addEventListener('click', close);
+  lightbox.querySelector('.lk-video-lightbox__backdrop')?.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('is-open')) close();
   });
 }
 

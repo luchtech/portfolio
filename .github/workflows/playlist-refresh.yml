@@ -1,0 +1,22 @@
+name: Nightly playlist refresh
+
+# Not managed by LaraKube CLI (which only touches larakube-deploy-*.yml) —
+# this just re-triggers that deploy workflow nightly so new videos added to
+# the YouTube playlist (fetched at build time, see src/lib/youtube.ts) get
+# picked up without a manual push.
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: 🔁 Re-run production deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run larakube-deploy-production.yml --repo "${{ github.repository }}" --ref "${{ github.event.repository.default_branch }}"
