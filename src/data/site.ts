@@ -223,10 +223,10 @@ export const larakube = {
   // fallback used if that fetch fails.
   videosPlaylistId: 'PLA7VUwI0KNjI',
   videos: [
-    { title: 'LaraKube Desktop: Deploy a Kubernetes Server in 3 Minutes', youtubeId: 'VVXIGK9IUzE' },
-    { title: 'LaraKube Desktop: Install n8n with One Click', youtubeId: 'x3Xjpdr4yZs' },
-    { title: 'LaraKube Desktop: Install PocketBase (Self-Hosted Backend) in One Click', youtubeId: 'PwZQAWHCq-E' },
-    { title: 'LaraKube Desktop: Install WordPress (Zero-Config CMS) in One Click', youtubeId: '78BorLalCyU' },
+    { title: 'LaraKube Desktop: Deploy a Kubernetes Server in 3 Minutes', youtubeId: '9qw4NPD-Jz4' },
+    { title: 'LaraKube Desktop: Install n8n with One Click', youtubeId: 'kO4ouF1c0zc' },
+    { title: 'LaraKube Desktop: Install PocketBase (Self-Hosted Backend) in One Click', youtubeId: 'aj7jBycASs4' },
+    { title: 'LaraKube Desktop: Install WordPress (Zero-Config CMS) in One Click', youtubeId: 'W-pbvrJv8Fk' },
   ],
 };
 
