@@ -254,6 +254,27 @@ img {
 .btn--primary:hover {
   background: var(--accent-ink);
 }
+/* PDF button with an attached DOCX segment */
+.btn-pair {
+  display: inline-flex;
+  align-items: stretch;
+}
+.btn-pair .btn:hover {
+  transform: none;
+}
+.btn-pair__main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-pair__alt {
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-inline: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
 .btn--light {
   color: var(--on-ink);
 }

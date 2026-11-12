@@ -1,6 +1,6 @@
 # James Carlo Luchavez
 
-> Backend engineer with 7+ years building Laravel/PHP backends for teams in the US, Canada, Australia and the Philippines. Based in Cagayan de Oro, Philippines.
+> Backend engineer with 6+ years building Laravel/PHP backends for teams in the US, Canada, Australia and the Philippines. Based in Cagayan de Oro, Philippines.
 
 ## Flagship project: LaraKube Desktop
 
@@ -11,10 +11,20 @@ LaraKube Desktop (and LaraKube CLI) is an open-source tool, written in PHP (Nati
 
 ## Skills
 
-Backend: Laravel, PHP, FilamentPHP, GraphQL, REST APIs, MCP, OpenAI API.
+Backend: Laravel, PHP, Laravel Horizon, Laravel Reverb, FilamentPHP, GraphQL, REST APIs, MCP, OpenAI API.
+Frontend and testing: React, Inertia.js, PHPUnit, Pest.
 Data: MySQL, PostgreSQL, Redis, Meilisearch, SeaweedFS.
-Infrastructure: Docker, Kubernetes, k3s, Traefik, OpenTofu, OpenBao.
-Cloud and CI: AWS Lambda, AWS S3, DigitalOcean, Hetzner, Cloudflare, GitHub Actions.
+Infrastructure: Linux, Nginx, Docker, Kubernetes, k3s, Traefik, OpenTofu, OpenBao.
+Cloud and CI: AWS Lambda, EC2, RDS, S3, CloudFront, Elastic Beanstalk, Bref, DigitalOcean, Hetzner, Cloudflare, GitHub Actions.
+
+## Experience
+
+- Founder & Lead Engineer, LuchTech Web Development Services (Apr 2026 – now): building LaraKube.
+- Systems Integration Engineer, MCM Retail Group, Jacksonville, remote (Feb 2025 – Jun 2026): sole backend engineer; consolidated dozens of automation scripts into one Laravel platform integrating 7 third-party APIs.
+- Backend Developer, MCM Retail Group (Feb 2024 – Feb 2025): moved automations to AWS Lambda, then to Laravel on Lambda with Bref.
+- Freelance Web Developer, Value Direct Inc., Atlanta, remote (Dec 2022 – May 2026).
+- Software Engineer, Fligno Software Philippines (Oct 2021 – Aug 2023): client work for FIN-PAY (Brisbane) and Paiid (Vancouver); 15+ open-source Laravel packages.
+- Laravel Developer, Fourello (Nov 2020 – Sep 2021).
 
 ## Contact
 

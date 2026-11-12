@@ -1,6 +1,4 @@
 // All page text lives here, so edits don't require touching components.
-// Content mirrors references/mockup/src/App.tsx (the Figma-exported source of
-// truth) — keep the two in sync rather than drifting from it.
 // `icon` is a simple-icons slug (see https://simpleicons.org). Leave it out
 // for a text-only chip. `aws` is special-cased as a small text badge.
 
@@ -17,6 +15,7 @@ export const person = {
   viberUrl: 'viber://chat?number=639061886959',
   messengerUrl: 'https://m.me/luchaveztech',
   resumeUrl: '/resume.pdf',
+  resumeDocxUrl: '/resume.docx',
   location: 'Cagayan de Oro, Philippines',
 };
 
@@ -32,7 +31,7 @@ export const hero = {
   headline: 'I build the platform your Laravel app',
   headlineAccent: 'runs on.',
   lede:
-    "I'm James, a backend engineer with 7+ years of Laravel and PHP behind me. I also build LaraKube Desktop, an open-source tool that provisions servers with OpenTofu and runs Laravel apps on k3s.",
+    "I'm James, a backend engineer with 6+ years of Laravel and PHP behind me. Most recently I ran a 7-API integration platform solo at MCM Retail Group. I also build LaraKube Desktop, an open-source tool that provisions servers with OpenTofu and runs Laravel apps on k3s.",
   primary: { label: 'Read the LaraKube Desktop story', href: '#larakube' },
   secondary: { label: 'github.com/luchtech', href: 'https://github.com/luchtech' },
   status: 'Open to remote backend and platform roles',
@@ -240,6 +239,12 @@ export const skills = {
         { name: 'Laravel', icon: 'laravel' },
         { name: 'PHP', icon: 'php' },
         { name: 'FilamentPHP', icon: 'filament' },
+        { name: 'Laravel Horizon' },
+        { name: 'Laravel Reverb' },
+        { name: 'React', icon: 'react' },
+        { name: 'Inertia', icon: 'inertia' },
+        { name: 'PHPUnit' },
+        { name: 'Pest' },
         { name: 'GraphQL', icon: 'graphql' },
         { name: 'REST APIs' },
         { name: 'MCP' },
@@ -261,6 +266,8 @@ export const skills = {
     {
       name: 'Infrastructure',
       items: [
+        { name: 'Linux', icon: 'linux' },
+        { name: 'Nginx', icon: 'nginx' },
         { name: 'Docker', icon: 'docker' },
         { name: 'Kubernetes', icon: 'kubernetes' },
         { name: 'k3s', icon: 'k3s' },
@@ -273,7 +280,12 @@ export const skills = {
       name: 'Cloud and CI',
       items: [
         { name: 'AWS Lambda' },
+        { name: 'AWS EC2' },
+        { name: 'AWS RDS' },
         { name: 'AWS S3' },
+        { name: 'CloudFront' },
+        { name: 'Elastic Beanstalk' },
+        { name: 'Bref' },
         { name: 'DigitalOcean', icon: 'digitalocean' },
         { name: 'Hetzner', icon: 'hetzner' },
         { name: 'Cloudflare', icon: 'cloudflare' },
@@ -286,25 +298,51 @@ export const skills = {
 export const experience = {
   title: 'Experience',
   subtitle:
-    '7+ years building Laravel backends for teams in the US, Canada, Australia and the Philippines.',
+    '6+ years building Laravel backends for teams in the US, Canada, Australia and the Philippines.',
   roles: [
     {
-      date: 'Now',
-      title: 'Founder, LuchTech Web Development Services',
-      description: 'Building LaraKube Desktop, LaraKube CLI and the upcoming LaraKube Cloud.',
+      date: 'Apr 2026 – now',
+      title: 'Founder & Lead Engineer · LuchTech Web Development Services',
+      description:
+        'Building LaraKube, an open-source platform that provisions servers with OpenTofu across 4 clouds and deploys Laravel and 14 other frameworks to k3s, with a NativePHP desktop app and a Laravel Zero CLI.',
       tags: [
         { name: 'k3s', icon: 'k3s' },
         { name: 'OpenTofu', icon: 'opentofu' },
         { name: 'OpenBao', icon: 'openbao' },
+        { name: 'React', icon: 'react' },
+        { name: 'Inertia', icon: 'inertia' },
       ] as Tech[],
     },
     {
-      date: '2022 – now',
-      title: 'Freelance Web Developer · Value Direct Inc., Atlanta',
+      date: 'Feb 2025 – Jun 2026',
+      title: 'Systems Integration Engineer · MCM Retail Group, Jacksonville (remote)',
       description:
-        'Architect, build and run high-performance web apps, and the REST APIs that connect them to outside services.',
+        'Became the sole backend engineer after layoffs and consolidated dozens of scattered automation scripts into one version-controlled Laravel platform integrating 7 third-party APIs: Jotform webhooks, Airtable, GoHighLevel CRM, Mobiz SMS, Checkbook.io payouts, GunBroker and Shippo. Moved it from AWS Lambda to EC2 with Docker Swarm, and added a FilamentPHP admin panel, real-time features with Laravel Reverb, and LLM features with the OpenAI API.',
       tags: [
         { name: 'Laravel', icon: 'laravel' },
+        { name: 'FilamentPHP', icon: 'filament' },
+        { name: 'Inertia', icon: 'inertia' },
+        { name: 'React', icon: 'react' },
+        { name: 'Docker Swarm', icon: 'docker' },
+        { name: 'OpenAI API' },
+      ] as Tech[],
+    },
+    {
+      date: 'Feb 2024 – Feb 2025',
+      title: 'Backend Developer · MCM Retail Group, Jacksonville (remote)',
+      description:
+        'Migrated business automations from Make, Zapier, Airtable, Google Apps Script and GoHighLevel into AWS Lambda, then led the move from standalone JavaScript scripts to Laravel on Lambda with Bref for version control and a shared codebase.',
+      tags: [{ name: 'Laravel', icon: 'laravel' }, { name: 'AWS Lambda' }, { name: 'Bref' }] as Tech[],
+    },
+    {
+      date: 'Dec 2022 – May 2026',
+      title: 'Freelance Web Developer · Value Direct Inc., Atlanta (remote)',
+      description:
+        'Built and regularly extended a form-builder platform for client intake in the legal-services industry, plus the REST APIs connecting it to outside services, until the client retired the service.',
+      tags: [
+        { name: 'Laravel', icon: 'laravel' },
+        { name: 'Inertia', icon: 'inertia' },
+        { name: 'React', icon: 'react' },
         { name: 'MySQL', icon: 'mysql' },
         { name: 'Redis', icon: 'redis' },
         { name: 'Meilisearch', icon: 'meilisearch' },
@@ -312,29 +350,22 @@ export const experience = {
       ] as Tech[],
     },
     {
-      date: '2025 – 2026',
-      title: 'Systems Integration Engineer · MCM Retail Group, Jacksonville',
+      date: 'Oct 2021 – Aug 2023',
+      title: 'Software Engineer · Fligno Software Philippines',
       description:
-        'Designed a Laravel backend that integrates and manages third-party services at scale, added LLM features with the OpenAI API, and built the admin panel in FilamentPHP.',
+        'Promoted twice, from Junior Web Developer to Software Engineer. Placed as backend engineer on client projects for FIN-PAY (Brisbane) and Paiid (Vancouver). Published 15+ open-source Laravel packages on Packagist (about 10,000 downloads), tested with PHPUnit and Pest.',
       tags: [
         { name: 'Laravel', icon: 'laravel' },
-        { name: 'FilamentPHP', icon: 'filament' },
-        { name: 'OpenAI API' },
+        { name: 'PHP', icon: 'php' },
+        { name: 'Packagist', icon: 'packagist' },
       ] as Tech[],
     },
     {
-      date: '2024 – 2025',
-      title: 'Backend Developer · MCM Retail Group, Jacksonville',
+      date: 'Nov 2020 – Sep 2021',
+      title: 'Laravel Developer · Fourello, Mandaluyong',
       description:
-        'Moved critical processes to AWS Lambda for faster runs and lower cloud costs, and led the team’s move to serverless Laravel.',
-      tags: [{ name: 'Laravel', icon: 'laravel' }, { name: 'AWS Lambda' }] as Tech[],
-    },
-    {
-      date: '2020 – 2023',
-      title: 'Earlier roles',
-      description:
-        'Software Engineer at Fligno Software Philippines, Backend Engineer at FIN-PAY in Brisbane, Software Engineer at Paiid in Vancouver, and Laravel Backend Developer at Fourello in Mandaluyong.',
-      tags: [] as Tech[],
+        'Deployed Laravel apps on AWS (Elastic Beanstalk, EC2, RDS, S3 and CloudFront), integrated PayMaya payments and Mr. Speedy delivery as reusable Laravel SDKs, and built the team’s packages (about 20,000 downloads combined).',
+      tags: [{ name: 'Laravel', icon: 'laravel' }, { name: 'AWS', icon: 'aws' }] as Tech[],
     },
   ],
 };

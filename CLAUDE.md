@@ -33,7 +33,6 @@ This is a single-page Astro site (no framework islands, no client-side JS beyond
   - `Chip.astro` wraps `Icon` into a tech pill; used for tool/skill lists.
   - `Lucide.astro` hand-inlines a small fixed set of Lucide icon paths (no icon package dependency) — extend its `paths` map and `Props['name']` union to add more.
 - **[src/styles/global.css](src/styles/global.css)** is the single stylesheet for the whole site (not component-scoped `<style>` blocks), imported once from `index.astro`. Theming is via CSS custom properties defined on `:root` (`--ink`, `--accent`, `--paper`, `--muted`, etc.).
-- **[references/mockup/](references/mockup/)** is a Figma-exported React/Vite prototype (`src/App.tsx`) kept as a *design and copy reference only* — it is not live code and is not built or deployed. When content or layout drifts between the Astro build and this mockup, treat the mockup as the source of truth for wording, structure, and the design system, and port it into `site.ts`/`index.astro` rather than editing `references/mockup/` itself.
 
 ## Local dev environment
 

@@ -71,7 +71,7 @@ const whatsappQr = await QRCode.toString(person.whatsappUrl, {
 });
 
 const description =
-  'James Carlo Luchavez, backend engineer: 7+ years of Laravel and PHP, and the builder of LaraKube Desktop, an open-source tool that runs Laravel apps on k3s.';
+  'James Carlo Luchavez, backend engineer: 6+ years of Laravel and PHP, and the builder of LaraKube Desktop, an open-source tool that runs Laravel apps on k3s.';
 const canonicalUrl = new URL('/', Astro.site);
 const ogImageUrl = new URL('/og-image.png', Astro.site);
 const knowsAbout = skills.groups.flatMap((g) => g.items.map((i) => i.name));
@@ -172,10 +172,13 @@ const jsonLd = {
           <Lucide name="sun" size={18} />
           <Lucide name="moon" size={18} />
         </button>
-        <a class="btn" href={person.resumeUrl} target="_blank" rel="noopener">
-          <Lucide name="download" size={16} />
-          Download resume
-        </a>
+        <div class="btn-pair">
+          <a class="btn btn-pair__main" href={person.resumeUrl} target="_blank" rel="noopener" aria-label="Download resume as PDF">
+            <Lucide name="download" size={16} />
+            Download resume
+          </a>
+          <a class="btn btn-pair__alt" href={person.resumeDocxUrl} download aria-label="Download resume as a Word document (DOCX)">DOCX</a>
+        </div>
       </div>
     </header>
 
@@ -545,10 +548,13 @@ const jsonLd = {
             <Icon slug="github" size={16} tone="mono" decorative />
             GitHub
           </a>
-          <a class="btn btn--light" href={person.resumeUrl} target="_blank" rel="noopener">
-            <Lucide name="download" size={16} />
-            Download resume
-          </a>
+          <div class="btn-pair">
+            <a class="btn btn--light btn-pair__main" href={person.resumeUrl} target="_blank" rel="noopener" aria-label="Download resume as PDF">
+              <Lucide name="download" size={16} />
+              Download resume
+            </a>
+            <a class="btn btn--light btn-pair__alt" href={person.resumeDocxUrl} download aria-label="Download resume as a Word document (DOCX)">DOCX</a>
+          </div>
         </div>
 
         <p class="contact-also">Or message me directly:</p>
