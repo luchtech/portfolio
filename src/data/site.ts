@@ -77,9 +77,11 @@ export const larakube = {
   // What LaraKube itself is built with — distinct from `tools` above, which
   // is the toolbox James uses for client work, not this project's own stack.
   stack: {
-    shared: { name: 'PHP', icon: 'php' } as Tech,
-    cli: { name: 'Laravel Zero', href: 'https://laravel-zero.com/' } as Tech,
-    desktop: { name: 'NativePHP', href: 'https://nativephp.com/' } as Tech,
+    language: { name: 'PHP', icon: 'php' } as Tech,
+    parts: [
+      { label: 'CLI', icon: 'terminal', name: 'Laravel Zero', href: 'https://laravel-zero.com/' },
+      { label: 'Desktop app', icon: 'monitor', name: 'NativePHP', href: 'https://nativephp.com/' },
+    ] as const,
   },
   facts: [
     {
@@ -172,10 +174,6 @@ export const larakube = {
       title: 'Managed Kubernetes (e.g. DOKS)',
       sub: 'same manifests when you outgrow one server',
     },
-  },
-  roadmap: {
-    title: 'Coming soon: LaraKube Cloud',
-    text: 'a web version of LaraKube Desktop with accounts and teams — no install required.',
   },
   decisionsTitle: 'Architecture decisions and trade-offs',
   decisions: [

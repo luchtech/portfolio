@@ -49,8 +49,16 @@ const repoStatsResults = await Promise.allSettled(
   repoRefs.map((r) => fetchRepoStats(r.owner, r.repo))
 );
 const repoStats = repoStatsResults
-  .map((r) => (r.status === 'fulfilled' ? r.value : null))
+  .map((r, i) =>
+    r.status === 'fulfilled' && r.value
+      ? { ...r.value, url: `https://github.com/${repoRefs[i].owner}/${repoRefs[i].repo}` }
+      : null
+  )
   .filter((r): r is NonNullable<typeof r> => r !== null);
+// The stat rows already link to each repo; other links (docs, and any repo
+// whose stats failed to load) are listed alongside them as plain rows.
+const statUrls = new Set(repoStats.map((r) => r.url));
+const pillLinks = larakube.links.filter((l) => !statUrls.has(l.href));
 
 // Live playlist videos, fetched once at build time. A failed fetch falls
 // back to the static list in site.ts rather than breaking the build.
@@ -344,22 +352,48 @@ const jsonLd = {
             </div>
           </div>
 
-          {repoStats.length > 0 && (
-            <ul class="lk-repo-stats">
-              {repoStats.map((r) => (
-                <li>
+          <ul class="lk-repo-stats">
+            {repoStats.map((r) => (
+              <li>
+                <a href={r.url} target="_blank" rel="noopener">
                   <Icon slug="github" size={16} decorative />
                   <strong>{r.repo}</strong>
                   {r.pushedAt && <span>updated {relativeTime(r.pushedAt)}</span>}
                   {r.latestRelease && <span>{r.latestRelease}</span>}
-                </li>
-              ))}
-            </ul>
-          )}
+                  <span class="lk-repo-stats__arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+            {pillLinks.map((l) => (
+              <li>
+                <a href={l.href} target="_blank" rel="noopener">
+                  {l.label.includes('GitHub') ? <Icon slug="github" size={16} decorative /> : <Lucide name="book-open" size={16} />}
+                  <strong>{l.label}</strong>
+                  <span class="lk-repo-stats__arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
 
           <div class="lk-stack">
             <p class="label">Built with</p>
-            <p class="lk-stack-line"><Icon slug={larakube.stack.shared.icon!} label={larakube.stack.shared.name} size={18} />{larakube.stack.shared.name} — CLI on <a href={larakube.stack.cli.href} target="_blank" rel="noopener">{larakube.stack.cli.name}</a>{', '}Desktop on <a href={larakube.stack.desktop.href} target="_blank" rel="noopener">{larakube.stack.desktop.name}</a></p>
+            <ul class="lk-stack-grid">
+              {larakube.stack.parts.map((part) => (
+                <li>
+                  <a href={part.href} target="_blank" rel="noopener">
+                    <span class="lk-stack-grid__icon"><Lucide name={part.icon} size={18} /></span>
+                    <span class="lk-stack-grid__text">
+                      <span class="lk-stack-grid__label">{part.label}</span>
+                      <strong>{part.name} <span aria-hidden="true">↗</span></strong>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p class="lk-stack-note">
+              <Icon slug={larakube.stack.language.icon!} label={larakube.stack.language.name} size={18} />
+              Both written in {larakube.stack.language.name}.
+            </p>
           </div>
 
           <ul class="facts">
@@ -390,8 +424,11 @@ const jsonLd = {
           </ul>
 
           <!-- How a deploy flows -->
-          <div class="block">
-            <h3 class="h3">How a deploy flows</h3>
+          <details class="block flow" open>
+            <summary class="flow-summary">
+              <h3 class="h3">How a deploy flows</h3>
+              <span class="flow-toggle" aria-hidden="true"><Lucide name="chevron-down" size={18} /></span>
+            </summary>
             <figure class="diagram" style="margin:0">
               <div class="diagram-row">
                 <div class="diagram-inputs">
@@ -444,10 +481,23 @@ const jsonLd = {
                 </div>
               </div>
             </figure>
-          </div>
+          </details>
+          <script is:inline>
+            // Collapsed on phones, where the diagram stacks into a long column;
+            // always open on wider screens (where the summary isn't clickable).
+            // Runs during parsing, so there's no flash of the open diagram, and
+            // re-syncs when the viewport crosses the breakpoint (rotation,
+            // resizing, devtools device mode).
+            (function (flow) {
+              var mq = window.matchMedia('(max-width: 600px)');
+              function sync() { flow.open = !mq.matches; }
+              sync();
+              mq.addEventListener('change', sync);
+            })(document.currentScript.previousElementSibling);
+          </script>
 
           <!-- Decisions -->
-          <div class="block">
+          <div class="block decisions-block">
             <h3 class="h3">{larakube.decisionsTitle}</h3>
             <ul class="decisions">
               {larakube.decisions.map((d, i) => (
@@ -462,19 +512,6 @@ const jsonLd = {
             </ul>
           </div>
 
-          <p class="lk-roadmap">
-            <Lucide name="arrow-right" size={16} />
-            <strong>{larakube.roadmap.title}</strong> — {larakube.roadmap.text}
-          </p>
-
-          <div class="pill-links">
-            {larakube.links.map((l) => (
-              <a class="pill-link" href={l.href} target="_blank" rel="noopener">
-                {l.label.includes('GitHub') ? <Icon slug="github" size={15} decorative /> : <Lucide name="book-open" size={15} />}
-                {l.label} <span aria-hidden="true">↗</span>
-              </a>
-            ))}
-          </div>
         </div>
       </section>
 
