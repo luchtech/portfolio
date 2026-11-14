@@ -243,6 +243,8 @@ export const skills = {
         { name: 'Inertia', icon: 'inertia' },
         { name: 'PHPUnit' },
         { name: 'Pest' },
+        { name: 'Playwright' },
+        { name: 'Sentry', icon: 'sentry' },
         { name: 'GraphQL', icon: 'graphql' },
         { name: 'REST APIs' },
         { name: 'MCP' },
@@ -351,7 +353,7 @@ export const experience = {
       date: 'Oct 2021 – Aug 2023',
       title: 'Software Engineer · Fligno Software Philippines',
       description:
-        'Promoted twice, from Junior Web Developer to Software Engineer. Placed as backend engineer on client projects for FIN-PAY (Brisbane) and Paiid (Vancouver). Published 15+ open-source Laravel packages on Packagist (about 10,000 downloads), tested with PHPUnit and Pest.',
+        'Promoted twice, from Junior Web Developer to Software Engineer. Placed as backend engineer on client projects for FIN-PAY (Brisbane) and Paiid (Vancouver). Published 15+ open-source Laravel packages on Packagist (about 10,000 downloads), tested with PHPUnit and Pest. Tracked production errors with Sentry.',
       tags: [
         { name: 'Laravel', icon: 'laravel' },
         { name: 'PHP', icon: 'php' },

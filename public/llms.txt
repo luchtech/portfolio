@@ -12,7 +12,7 @@ LaraKube Desktop (and LaraKube CLI) is an open-source tool, written in PHP (Nati
 ## Skills
 
 Backend: Laravel, PHP, Laravel Horizon, Laravel Reverb, FilamentPHP, GraphQL, REST APIs, MCP, OpenAI API.
-Frontend and testing: React, Inertia.js, PHPUnit, Pest.
+Frontend and testing: React, Inertia.js, PHPUnit, Pest (including browser tests with Playwright). Monitoring: Sentry.
 Data: MySQL, PostgreSQL, Redis, Meilisearch, SeaweedFS.
 Infrastructure: Linux, Nginx, Docker, Kubernetes, k3s, Traefik, OpenTofu, OpenBao.
 Cloud and CI: AWS Lambda, EC2, RDS, S3, CloudFront, Elastic Beanstalk, Bref, DigitalOcean, Hetzner, Cloudflare, GitHub Actions.
