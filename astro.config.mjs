@@ -4,6 +4,10 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://james.luchtech.dev',
+  // Let <Image> fetch and optimise YouTube thumbnails at build time.
+  image: {
+    domains: ['i.ytimg.com'],
+  },
 vite: {
     server: {
       // Astro runs Vite underneath, and Vite 6+ rejects any Host header that

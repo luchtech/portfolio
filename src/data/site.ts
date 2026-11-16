@@ -20,6 +20,7 @@ export const person = {
 };
 
 export const nav = [
+  { label: 'Clients', href: '#testimonials' },
   { label: 'LaraKube Desktop', href: '#larakube' },
   { label: 'Skills', href: '#skills' },
   { label: 'Experience', href: '#experience' },
@@ -68,7 +69,7 @@ export const tools: Tech[] = [
 
 export const larakube = {
   title: 'LaraKube Desktop: your apps and your team’s tools, on servers you own',
-  logo: '/larakube.png', // shown if the file exists in public/
+  logo: 'larakube.png', // in src/assets/; shown only if the file exists
   spinProUrl: 'https://getspin.pro/',
   problem: 'Docker Swarm gets you to production fast — but it won’t carry you into Kubernetes.',
   why: [
@@ -207,7 +208,7 @@ export const larakube = {
     { label: 'larakube-cli on GitHub', href: 'https://github.com/luchavez-technologies/larakube-cli' },
     { label: 'larakube-desktop on GitHub', href: 'https://github.com/luchavez-technologies/larakube-desktop' },
   ],
-  // Drop files into public/desktop/ with these exact names to fill these in;
+  // Drop files into src/assets/desktop/ with these exact names to fill these in;
   // until then each one renders as a placeholder with its expected path.
   screenshots: [
     { file: '01-dashboard.png', caption: 'Fleet dashboard' },
@@ -366,6 +367,27 @@ export const experience = {
       description:
         'Deployed Laravel apps on AWS (Elastic Beanstalk, EC2, RDS, S3 and CloudFront), integrated PayMaya payments and Mr. Speedy delivery as reusable Laravel SDKs, and built the team’s packages (about 20,000 downloads combined).',
       tags: [{ name: 'Laravel', icon: 'laravel' }, { name: 'AWS', icon: 'aws' }] as Tech[],
+    },
+  ],
+};
+
+export const testimonials = {
+  title: 'What clients say',
+  subtitle: 'From the people I built for.',
+  items: [
+    {
+      quote: 'James Carlo works tirelessly to solve technology problems.',
+      name: 'Isaiah Miller',
+      role: 'CEO, MCM Retail Group, Inc.',
+      // File name in src/assets/testimonials/, optimised at build time.
+      photo: 'isaiah.png',
+    },
+    {
+      quote:
+        'James turned what we needed into a working system. He built our intake forms, connected them to the other services we use, and looked after the platform for more than three years. He was patient, explained things clearly, and always delivered. He is a trustworthy individual.',
+      name: 'Bruno',
+      role: 'President, Value Direct Inc.',
+      photo: null as string | null,
     },
   ],
 };
