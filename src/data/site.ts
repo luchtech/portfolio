@@ -378,7 +378,7 @@ export const testimonials = {
     {
       quote: 'James Carlo works tirelessly to solve technology problems.',
       name: 'Isaiah Miller',
-      role: 'CEO, MCM Retail Group, Inc.',
+      role: 'Head of Innovation, MCM Retail Group, Inc.',
       // File name in src/assets/testimonials/, optimised at build time.
       photo: 'isaiah.png',
     },
