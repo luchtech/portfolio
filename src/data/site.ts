@@ -318,7 +318,7 @@ export const experience = {
       date: 'Feb 2025 – Jun 2026',
       title: 'Systems Integration Engineer · MCM Retail Group, Jacksonville (remote)',
       description:
-        'Became the sole backend engineer after layoffs and consolidated dozens of scattered automation scripts into one version-controlled Laravel platform integrating 7 third-party APIs: Jotform webhooks, Airtable, GoHighLevel CRM, Mobiz SMS, Checkbook.io payouts, GunBroker and Shippo. Moved it from AWS Lambda to EC2 with Docker Swarm, and added a FilamentPHP admin panel, real-time features with Laravel Reverb, and LLM features with the OpenAI API.',
+        'Kept on through layoffs as the sole backend engineer, and consolidated about 50 scattered automation scripts into one version-controlled Laravel platform integrating 7 third-party APIs: Jotform webhooks, Airtable, GoHighLevel CRM, Mobiz SMS, Checkbook.io payouts, GunBroker and Shippo. Cut redundant API calls by tracking each listing\'s lifecycle in the database and batching changes-only syncs. Built a FilamentPHP console for distributing payouts across three brands and monitoring every integration for outages, moved the platform from AWS Lambda to EC2 with Docker Swarm, and added real-time features with Laravel Reverb and LLM features with the OpenAI API.',
       tags: [
         { name: 'Laravel', icon: 'laravel' },
         { name: 'FilamentPHP', icon: 'filament' },
@@ -332,14 +332,14 @@ export const experience = {
       date: 'Feb 2024 – Feb 2025',
       title: 'Backend Developer · MCM Retail Group, Jacksonville (remote)',
       description:
-        'Migrated business automations from Make, Zapier, Airtable, Google Apps Script and GoHighLevel into AWS Lambda, then led the move from standalone JavaScript scripts to Laravel on Lambda with Bref for version control and a shared codebase.',
+        'Migrated about 50 business automations from Make, Zapier, Airtable, Google Apps Script and GoHighLevel into AWS Lambda, cutting a large share of paid automation-platform costs, then led the move from standalone JavaScript scripts to Laravel on Lambda with Bref for version control and a shared codebase.',
       tags: [{ name: 'Laravel', icon: 'laravel' }, { name: 'AWS Lambda' }, { name: 'Bref' }] as Tech[],
     },
     {
       date: 'Dec 2022 – May 2026',
       title: 'Freelance Web Developer · Value Direct Inc., Atlanta (remote)',
       description:
-        'Built and regularly extended a form-builder platform for client intake in the legal-services industry, plus the REST APIs connecting it to outside services, until the client retired the service.',
+        'Built and regularly extended a form-builder platform for client intake in the legal-services industry, launching new intake forms on demand and handling up to 20+ submissions a day, plus the REST APIs connecting it to outside services, until the client retired the service.',
       tags: [
         { name: 'Laravel', icon: 'laravel' },
         { name: 'Inertia', icon: 'inertia' },
